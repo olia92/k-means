@@ -37,6 +37,8 @@ int main(){
     float sum = 1;
     int counter =0;
 
+    printf("Vec[%d][%d] - Classes[%d]\n",N,Nv,Nc);
+
     InitializeVec();
     InitializeCenters();
     
@@ -137,9 +139,9 @@ float CalculateCenters(){
     }
     //*
     for(int i=0;i<Nc;i++){
-        
+        float c =1.0/counter[i];
         for(int j=0;j<Nv;j++){
-        newCenters[i][j]=newCenters[i][j]/counter[i];
+        newCenters[i][j]*=c;
         }
     }//*/
 
