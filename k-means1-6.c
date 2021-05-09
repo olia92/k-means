@@ -13,10 +13,16 @@ CPU:	4-core, Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz, 4393.71 BogoMips
 #include <time.h> 
 #include <string.h>
 #include <math.h>
-
+//*
 #define N 100000 //observations
 #define Nv 1000 //d-dimensional
 #define Nc 100 //sets
+//*/
+/*
+#define N 6 //observations
+#define Nv 2 //d-dimensional
+#define Nc 2 //sets
+*/
 #define THR_KMEANS 0.000001
 
 void InitializeVec();
@@ -24,8 +30,12 @@ void InitializeCenters();
 float Euclidean();
 void CalculateCalsses();
 float CalculateCenters();
+//*****************************
+void PrintVec(float *a,int n);
+void PrintVecInt(int *a,int n);
 
-//*******************
+//*****************************
+
 float Vec[N][Nv];
 float Center[Nc][Nv];
 int Classes[N];
@@ -36,13 +46,16 @@ int main(){
     double cpu_time_used=0;
     float sum = 1;
     int counter =0;
+    
+    printf("Vec[%d][%d] - Classes[%d]\n",N,Nv,Nc);
+
 
     InitializeVec();
     InitializeCenters();
-    
+    //PrintVec((float *)Vec,N*Nv);
     printf("Entering while...\n");
     printf("count . error . time per loop \n");
-    while (sum>THR_KMEANS && counter<3){
+    while (sum>THR_KMEANS&&counter<3 ){
         start=clock();
         CalculateCalsses();
         sum=CalculateCenters();
@@ -51,7 +64,8 @@ int main(){
         printf("%d . %f . (time: %lf)\n",counter,sum,(double)(end - start) / CLOCKS_PER_SEC);
         cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;
     }
-    
+    //PrintVec((float *)Center,Nc*Nv);
+    //PrintVecInt(Classes,N);
     printf("Converged after %d  cirlces\n",counter);
     printf("Total time :%lf s\n",cpu_time_used);
     return 0;
@@ -66,7 +80,7 @@ void InitializeVec(){
     for(int i=0;i<N;i++){
         for(int j=0;j<Nv;j++){
             //random values [-10,10]
-            Vec[i][j]=(rand() % (10 - (-10) + 1)) + (-10);//(rand()/(float)RAND_MAX);
+            Vec[i][j]=(rand()/(float)RAND_MAX)*20.0-10.0;
         }
     }
 }
@@ -97,9 +111,10 @@ void InitializeCenters(){
 
 
 float Euclidean(float *C, float *V){
+    
     float sum = 0.0;
     for(int i=0;i<Nv;i++){
-        float temp =C[i]-V[i];
+        float temp =*C++ - *V++;
         sum += temp*temp;
     }
     return sum;
@@ -137,9 +152,9 @@ float CalculateCenters(){
     }
     //*
     for(int i=0;i<Nc;i++){
-        
+        float c =1.0/counter[i];
         for(int j=0;j<Nv;j++){
-        newCenters[i][j]=newCenters[i][j]/counter[i];
+        newCenters[i][j]*=c;
         }
     }//*/
 
@@ -152,3 +167,14 @@ float CalculateCenters(){
     return sqrt(sum/Nc);
 }
 
+void PrintVec(float *a,int n){
+    for(int i=0;i<n;i++)
+        printf("%2.2f ",a[i]);
+    putchar('\n');
+}
+
+void PrintVecInt(int *a,int n){
+    for(int i=0;i<n;i++)
+        printf("%d ",a[i]);
+    putchar('\n');
+}
